@@ -13,27 +13,7 @@ export default defineConfig(({ mode }) => ({
     },
   },
   
-  plugins: [
-    react({
-      // Enable SWC for faster compilation
-      swcOptions: {
-        jsc: {
-          target: 'es2022',
-          parser: {
-            syntax: 'typescript',
-            tsx: true,
-          },
-          transform: {
-            react: {
-              runtime: 'automatic',
-              development: mode !== 'production',
-              refresh: mode !== 'production',
-            },
-          },
-        },
-      },
-    }),
-  ].filter(Boolean),
+  plugins: [react()],
 
   // Optimize dependencies
   optimizeDeps: {
