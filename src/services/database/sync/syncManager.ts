@@ -3,8 +3,8 @@ import { Patient } from '@/types/patient';
 
 // Event types for synchronization
 export type SyncEvent = {
-  type: 'patient_added' | 'patient_deleted';
-  data: Patient | number;
+  type: 'patient_added';
+  data: Patient;
 };
 
 class SyncManager {
@@ -32,14 +32,6 @@ class SyncManager {
     this.broadcastChannel.postMessage({
       type: 'patient_added',
       data: patient
-    });
-  }
-
-  // Patient deleted event
-  public broadcastPatientDeleted(id: number) {
-    this.broadcastChannel.postMessage({
-      type: 'patient_deleted',
-      data: id
     });
   }
 }
