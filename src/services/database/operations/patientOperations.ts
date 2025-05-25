@@ -3,6 +3,20 @@ import { Patient } from '@/types/patient';
 import { getDatabase } from '../connection';
 import { syncManager } from '../sync/syncManager';
 
+// Define the fields that can be updated
+export type UpdateablePatientFields = {
+  email?: string;
+  phone?: string;
+  address?: string;
+  emergency_contact_name?: string;
+  emergency_contact_phone?: string;
+  medical_conditions?: string;
+  medications?: string;
+  allergies?: string;
+  insurance_provider?: string;
+  insurance_policy_number?: string;
+};
+
 export const patientOperations = {
   async addPatient(patient: Omit<Patient, 'id' | 'created_at' | 'updated_at'>) {
     const database = getDatabase(); // Get database connection object
@@ -66,5 +80,48 @@ export const patientOperations = {
   async executeQuery(query: string): Promise<any> {
     const database = getDatabase();
     return await database.query(query);
+  },
+
+  async updatePatient(id: number, updates: UpdateablePatientFields): Promise<Patient> {
+    const database = getDatabase();
+    
+    // Start a transaction
+    await database.exec('BEGIN');
+    
+    try {
+      // Build the SET clause dynamically based on provided updates
+      const setClause = Object.keys(updates)
+        .map((key, index) => `${key} = $${index + 2}`)
+        .join(', ');
+      
+      // Add updated_at to the SET clause
+      const finalSetClause = `${setClause}, updated_at = CURRENT_TIMESTAMP`;
+      
+      // Build the query
+      const query = `
+        UPDATE patients 
+        SET ${finalSetClause}
+        WHERE id = $1
+        RETURNING *
+      `;
+      
+      // Execute the update
+      const result = await database.query(
+        query,
+        [id, ...Object.values(updates)]
+      );
+      
+      // Commit the transaction
+      await database.exec('COMMIT');
+      
+      // Broadcast the update
+      syncManager.broadcastPatientUpdated(result.rows[0] as Patient);
+      
+      return result.rows[0] as Patient;
+    } catch (error) {
+      // Rollback the transaction on error
+      await database.exec('ROLLBACK');
+      throw error;
+    }
   }
 }; 
