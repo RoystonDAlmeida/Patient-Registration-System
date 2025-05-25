@@ -14,6 +14,8 @@ import {
   validatePhone,
   validateAddress,
   validateMedicalInfo,
+  validateInsuranceProvider,
+  validatePolicyNumber
 } from "@/utils/validation";
 
 interface DatabaseOperations {
@@ -61,6 +63,8 @@ const PatientRegistrationForm = ({ db, onPatientRegistered }: PatientRegistratio
     newErrors.medical_conditions = validateMedicalInfo(formData.medical_conditions, "medical conditions");
     newErrors.medications = validateMedicalInfo(formData.medications, "medications");
     newErrors.allergies = validateMedicalInfo(formData.allergies, "allergies");
+    newErrors.insurance_provider = validateInsuranceProvider(formData.insurance_provider);
+    newErrors.insurance_policy_number = validatePolicyNumber(formData.insurance_policy_number);
 
     // Remove undefined errors
     Object.keys(newErrors).forEach(key => {
@@ -289,7 +293,35 @@ const PatientRegistrationForm = ({ db, onPatientRegistered }: PatientRegistratio
           />
         </div>
       </FormSection>
-      
+
+      {/* Insurance Information */}
+      <FormSection
+        title="Insurance Information"
+        description="Patient's insurance details"
+        icon={Shield}
+        iconColor="text-purple-600"
+        className="border-purple-100"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            label="Insurance Provider"
+            id="insurance_provider"
+            value={formData.insurance_provider}
+            onChange={(value) => handleInputChange("insurance_provider", value)}
+            placeholder="e.g., Star Health and Allied Insurance"
+            error={errors.insurance_provider}
+          />
+          <FormField
+            label="Policy Number"
+            id="insurance_policy_number"
+            value={formData.insurance_policy_number}
+            onChange={(value) => handleInputChange("insurance_policy_number", value)}
+            placeholder="e.g., STAR123456789"
+            error={errors.insurance_policy_number}
+          />
+        </div>
+      </FormSection>
+
       <div className="flex justify-center">
         <Button 
           type="submit" 
