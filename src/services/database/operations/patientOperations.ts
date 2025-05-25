@@ -64,6 +64,17 @@ export const patientOperations = {
     return result.rows as Patient[];
   },
 
+  // Function for deleting a selected patient
+  async deletePatient(id: number) {
+    const database = getDatabase();
+    const result = await database.query('DELETE FROM patients WHERE id = $1', [id]);
+    
+    // Broadcast the deletion to other tabs
+    syncManager.broadcastPatientDeleted(id);
+    
+    return result;
+  },
+
   async executeQuery(query: string): Promise<any> {
     const database = getDatabase();
     return await database.query(query);
