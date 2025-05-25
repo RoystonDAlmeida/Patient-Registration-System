@@ -7,7 +7,7 @@ export const PageHeader = ({ patientCount }: PageHeaderProps) => {
   return (
     <div className="text-center mb-8">
       <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-2 px-2">
-        Patient Registration System
+        Patient Pocket Ledger
       </h1>
       <p className="text-base sm:text-lg text-gray-600 mb-4 px-2">
         Secure, local patient data management with PGlite

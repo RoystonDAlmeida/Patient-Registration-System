@@ -18,7 +18,7 @@ const NotFound = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">
-            Patient Registration System
+            Patient Pocket Ledger
           </h1>
           <p className="text-gray-600 text-lg mb-4">
             Secure, local patient data management with PGlite
