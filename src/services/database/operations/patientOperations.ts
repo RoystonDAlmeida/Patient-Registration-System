@@ -45,11 +45,10 @@ export const patientOperations = {
       // Commit the transaction
       await database.exec('COMMIT');
       
-      // Broadcast the new patient to other tabs
-      const newPatient = result.rows[0] as Patient;
-      syncManager.broadcastPatientAdded(newPatient);
+      // Broadcast the change
+      syncManager.broadcastPatientAdded(result.rows[0] as Patient);
       
-      return newId;
+      return result.rows[0];
     } catch (error) {
       // Rollback the transaction on error
       await database.exec('ROLLBACK');
@@ -60,19 +59,8 @@ export const patientOperations = {
   // Function for fetching patient details from database
   async getAllPatients(): Promise<Patient[]> {
     const database = getDatabase();
-    const result = await database.query('SELECT * FROM patients ORDER BY created_at DESC');
+    const result = await database.query('SELECT * FROM patients ORDER BY id ASC');
     return result.rows as Patient[];
-  },
-
-  // Function for deleting a selected patient
-  async deletePatient(id: number) {
-    const database = getDatabase();
-    const result = await database.query('DELETE FROM patients WHERE id = $1', [id]);
-    
-    // Broadcast the deletion to other tabs
-    syncManager.broadcastPatientDeleted(id);
-    
-    return result;
   },
 
   async executeQuery(query: string): Promise<any> {
