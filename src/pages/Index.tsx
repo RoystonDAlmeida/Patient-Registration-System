@@ -1,10 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { toast } from "@/hooks/use-toast";
-import PatientRegistrationForm from "@/components/PatientRegistrationForm";
-import PatientList from "@/components/PatientList";
-import SQLQueryInterface from "@/components/SQLQueryInterface";
 import { Patient } from "@/types/patient";
 import { initializeDatabase, patientOperations, getDatabase } from "@/services/database";
 import { PageHeader } from "@/components/pages/index/PageHeader";
@@ -13,11 +10,24 @@ import { ErrorState } from "@/components/pages/index/ErrorState";
 import { TabNavigation } from "@/components/pages/index/TabNavigation";
 import { TabConfig } from "@/components/pages/index/types";
 
+// Lazy load components
+const PatientRegistrationForm = lazy(() => import("@/components/PatientRegistrationForm"));
+const PatientList = lazy(() => import("@/components/PatientList"));
+const SQLQueryInterface = lazy(() => import("@/components/SQLQueryInterface"));
+
+// Loading component for lazy-loaded components
+const ComponentLoader = () => (
+  <div className="flex items-center justify-center p-8">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+  </div>
+);
+
 const Index = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [initError, setInitError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("register");
+  const [db, setDb] = useState<any>(null);
 
   const tabs: TabConfig[] = [
     { id: "register", label: "Register Patient" },
@@ -28,12 +38,11 @@ const Index = () => {
   // Initialize database and load patients
   const initDatabase = async () => {
     try {
-      console.log("Initializing PGlite database...");
       setInitError(null);
-      await initializeDatabase();
+      const database = await initializeDatabase();
+      setDb(database);
       await loadPatients();
       setIsLoading(false);
-      console.log("Database initialized successfully");
     } catch (error) {
       console.error("Failed to initialize database:", error);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
@@ -70,16 +79,22 @@ const Index = () => {
     };
 
     window.addEventListener('patient-sync', handleSync as EventListener);
-    return () => window.removeEventListener('patient-sync', handleSync as EventListener);
-  }, []);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('patient-sync', handleSync as EventListener);
+      if (db) {
+        // Close database connection
+        db.close?.();
+      }
+    };
+  }, [db]);
 
   const loadPatients = async () => {
     try {
-      console.log("Loading patients from database...");
       const patientsData = await patientOperations.getAllPatients();
       const sortedPatients = patientsData.sort((a, b) => a.id - b.id);
       setPatients(sortedPatients);
-      console.log(`Loaded ${sortedPatients.length} patients`);
     } catch (error) {
       console.error("Failed to load patients:", error);
       toast({
@@ -91,7 +106,6 @@ const Index = () => {
   };
 
   const handlePatientRegistered = async () => {
-    console.log("Patient registered, reloading data...");
     await loadPatients();
     toast({
       title: "Success",
@@ -140,10 +154,12 @@ const Index = () => {
                 </CardHeader>
                 <CardContent className="p-0 sm:p-6">
                   <div className="px-3 sm:px-6">
-                    <PatientRegistrationForm 
-                      db={patientOperations} 
-                      onPatientRegistered={handlePatientRegistered}
-                    />
+                    <Suspense fallback={<ComponentLoader />}>
+                      <PatientRegistrationForm 
+                        db={patientOperations} 
+                        onPatientRegistered={handlePatientRegistered}
+                      />
+                    </Suspense>
                   </div>
                 </CardContent>
               </Card>
@@ -159,11 +175,13 @@ const Index = () => {
                 </CardHeader>
                 <CardContent className="p-0 sm:p-6">
                   <div className="px-3 sm:px-6">
-                    <PatientList 
-                      patients={patients} 
-                      db={patientOperations}
-                      setPatients={setPatients}
-                    />
+                    <Suspense fallback={<ComponentLoader />}>
+                      <PatientList 
+                        patients={patients} 
+                        db={patientOperations}
+                        setPatients={setPatients}
+                      />
+                    </Suspense>
                   </div>
                 </CardContent>
               </Card>
@@ -179,7 +197,9 @@ const Index = () => {
                 </CardHeader>
                 <CardContent className="p-0 sm:p-6">
                   <div className="px-3 sm:px-6">
-                    <SQLQueryInterface db={getDatabase()} />
+                    <Suspense fallback={<ComponentLoader />}>
+                      <SQLQueryInterface db={db} />
+                    </Suspense>
                   </div>
                 </CardContent>
               </Card>
