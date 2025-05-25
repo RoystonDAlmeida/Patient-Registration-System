@@ -13,6 +13,7 @@ import {
   validateEmail,
   validatePhone,
   validateAddress,
+  validateMedicalInfo,
 } from "@/utils/validation";
 
 interface DatabaseOperations {
@@ -57,6 +58,9 @@ const PatientRegistrationForm = ({ db, onPatientRegistered }: PatientRegistratio
     newErrors.address = validateAddress(formData.address);
     newErrors.emergency_contact_name = validateName(formData.emergency_contact_name, "Emergency contact name");
     newErrors.emergency_contact_phone = validatePhone(formData.emergency_contact_phone);
+    newErrors.medical_conditions = validateMedicalInfo(formData.medical_conditions, "medical conditions");
+    newErrors.medications = validateMedicalInfo(formData.medications, "medications");
+    newErrors.allergies = validateMedicalInfo(formData.allergies, "allergies");
 
     // Remove undefined errors
     Object.keys(newErrors).forEach(key => {
@@ -244,6 +248,48 @@ const PatientRegistrationForm = ({ db, onPatientRegistered }: PatientRegistratio
         </div>
       </FormSection>
 
+      {/* Medical Information Section */}
+      <FormSection
+        title="Medical Information"
+        description="Patient's medical history and conditions"
+        icon={Heart}
+        iconColor="text-pink-600"
+        className="border-pink-100"
+      >
+        <div className="space-y-4">
+          <FormField
+            label="Medical Conditions"
+            id="medical_conditions"
+            value={formData.medical_conditions}
+            onChange={(value) => handleInputChange("medical_conditions", value)}
+            placeholder="e.g., Hypertension, Type 2 Diabetes"
+            isTextarea
+            rows={3}
+            error={errors.medical_conditions}
+          />
+          <FormField
+            label="Current Medications"
+            id="medications"
+            value={formData.medications}
+            onChange={(value) => handleInputChange("medications", value)}
+            placeholder="e.g., Lisinopril 10mg daily, Metformin 500mg twice daily"
+            isTextarea
+            rows={3}
+            error={errors.medications}
+          />
+          <FormField
+            label="Allergies"
+            id="allergies"
+            value={formData.allergies}
+            onChange={(value) => handleInputChange("allergies", value)}
+            placeholder="e.g., Penicillin, Shellfish"
+            isTextarea
+            rows={3}
+            error={errors.allergies}
+          />
+        </div>
+      </FormSection>
+      
       <div className="flex justify-center">
         <Button 
           type="submit" 
