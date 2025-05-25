@@ -3,7 +3,7 @@ import { Patient } from '@/types/patient';
 
 // Event types for synchronization
 export type SyncEvent = {
-  type: 'patient_added';
+  type: 'patient_added' | 'patient_updated';
   data: Patient;
 };
 
@@ -31,6 +31,14 @@ class SyncManager {
   public broadcastPatientAdded(patient: Patient) {
     this.broadcastChannel.postMessage({
       type: 'patient_added',
+      data: patient
+    });
+  }
+
+  // Patient updated event
+  public broadcastPatientUpdated(patient: Patient) {
+    this.broadcastChannel.postMessage({
+      type: 'patient_updated',
       data: patient
     });
   }
