@@ -55,7 +55,9 @@ const PatientRegistrationForm = ({ db, onPatientRegistered }: PatientRegistratio
     newErrors.email = validateEmail(formData.email);
     newErrors.phone = validatePhone(formData.phone);
     newErrors.address = validateAddress(formData.address);
-    
+    newErrors.emergency_contact_name = validateName(formData.emergency_contact_name, "Emergency contact name");
+    newErrors.emergency_contact_phone = validatePhone(formData.emergency_contact_phone);
+
     // Remove undefined errors
     Object.keys(newErrors).forEach(key => {
       if (!newErrors[key as keyof NewPatient]) {
@@ -210,6 +212,35 @@ const PatientRegistrationForm = ({ db, onPatientRegistered }: PatientRegistratio
               error={errors.address}
             />
           </div>
+        </div>
+      </FormSection>
+
+      {/* Emergency Contact Section */}
+      <FormSection
+        title="Emergency Contact"
+        description="Emergency contact information"
+        icon={MapPin}
+        iconColor="text-red-600"
+        className="border-red-100"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            label="Emergency Contact Name"
+            id="emergency_contact_name"
+            value={formData.emergency_contact_name}
+            onChange={(value) => handleInputChange("emergency_contact_name", value)}
+            placeholder="Jane Doe"
+            error={errors.emergency_contact_name}
+          />
+          <FormField
+            label="Emergency Contact Phone"
+            id="emergency_contact_phone"
+            type="tel"
+            value={formData.emergency_contact_phone}
+            onChange={(value) => handleInputChange("emergency_contact_phone", value)}
+            placeholder="+91-1234567890"
+            error={errors.emergency_contact_phone}
+          />
         </div>
       </FormSection>
 
