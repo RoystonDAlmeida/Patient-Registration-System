@@ -5,7 +5,7 @@ import { syncManager } from '../sync/syncManager';
 
 export const patientOperations = {
   async addPatient(patient: Omit<Patient, 'id' | 'created_at' | 'updated_at'>) {
-    const database = getDatabase();
+    const database = getDatabase(); // Get database connection object
     
     // Start a transaction
     await database.exec('BEGIN');
@@ -55,6 +55,13 @@ export const patientOperations = {
       await database.exec('ROLLBACK');
       throw error;
     }
+  },
+
+  // Function for fetching patient details from database
+  async getAllPatients(): Promise<Patient[]> {
+    const database = getDatabase();
+    const result = await database.query('SELECT * FROM patients ORDER BY created_at DESC');
+    return result.rows as Patient[];
   },
 
   async executeQuery(query: string): Promise<any> {
