@@ -10,6 +10,9 @@ import { FormSection } from "@/components/ui/form-section";
 import {
   validateName,
   validateDateOfBirth,
+  validateEmail,
+  validatePhone,
+  validateAddress,
 } from "@/utils/validation";
 
 interface DatabaseOperations {
@@ -48,7 +51,11 @@ const PatientRegistrationForm = ({ db, onPatientRegistered }: PatientRegistratio
     newErrors.last_name = validateName(formData.last_name, "Last name");
     newErrors.date_of_birth = validateDateOfBirth(formData.date_of_birth);
 
-
+    // Optional fields
+    newErrors.email = validateEmail(formData.email);
+    newErrors.phone = validatePhone(formData.phone);
+    newErrors.address = validateAddress(formData.address);
+    
     // Remove undefined errors
     Object.keys(newErrors).forEach(key => {
       if (!newErrors[key as keyof NewPatient]) {
@@ -162,6 +169,47 @@ const PatientRegistrationForm = ({ db, onPatientRegistered }: PatientRegistratio
             error={errors.date_of_birth}
             max={new Date().toISOString().split('T')[0]}
           />
+        </div>
+      </FormSection>
+
+      {/* Contact Information */}
+      <FormSection
+        title="Contact Information"
+        description="How to reach the patient"
+        icon={Phone}
+        iconColor="text-green-600"
+        className="border-green-100"
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <FormField
+            label="Email"
+            id="email"
+            type="email"
+            value={formData.email}
+            onChange={(value) => handleInputChange("email", value)}
+            placeholder="john.doe@example.com"
+            error={errors.email}
+          />
+          <FormField
+            label="Phone Number"
+            id="phone"
+            type="tel"
+            value={formData.phone}
+            onChange={(value) => handleInputChange("phone", value)}
+            placeholder="+91-1234567890"
+            error={errors.phone}
+          />
+          <div className="md:col-span-2">
+            <FormField
+              label="Address"
+              id="address"
+              value={formData.address}
+              onChange={(value) => handleInputChange("address", value)}
+              placeholder="123 Linking Road, Flat 4B, Bandra West, Mumbai, Maharashtra 400050"
+              isTextarea
+              error={errors.address}
+            />
+          </div>
         </div>
       </FormSection>
 
