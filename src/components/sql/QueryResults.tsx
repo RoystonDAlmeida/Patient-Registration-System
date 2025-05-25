@@ -16,19 +16,22 @@ export const QueryResults = ({ results }: QueryResultsProps) => {
           {results.error ? "Error occurred" : `${results.rows?.length || 0} rows returned`}
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-0">
         {results.error ? (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 m-4">
             <pre className="text-red-700 text-sm whitespace-pre-wrap">{results.error}</pre>
           </div>
         ) : results.rows && results.rows.length > 0 ? (
-          <ScrollArea className="w-full">
+          <div className="w-full">
             <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b bg-gray-50">
+              <table className="w-full border-collapse">
+                <thead className="bg-gray-50">
+                  <tr>
                     {Object.keys(results.rows[0]).map((column) => (
-                      <th key={column} className="text-left p-2 font-medium">
+                      <th 
+                        key={column} 
+                        className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider whitespace-nowrap border-b"
+                      >
                         {column}
                       </th>
                     ))}
@@ -36,9 +39,12 @@ export const QueryResults = ({ results }: QueryResultsProps) => {
                 </thead>
                 <tbody>
                   {results.rows.map((row: any, index: number) => (
-                    <tr key={index} className="border-b hover:bg-gray-50">
+                    <tr key={index} className="hover:bg-gray-50">
                       {Object.values(row).map((value: any, cellIndex: number) => (
-                        <td key={cellIndex} className="p-2 max-w-xs truncate">
+                        <td 
+                          key={cellIndex} 
+                          className="px-4 py-2 whitespace-nowrap text-sm text-gray-900 border-b"
+                        >
                           {formatValue(value)}
                         </td>
                       ))}
@@ -47,7 +53,7 @@ export const QueryResults = ({ results }: QueryResultsProps) => {
                 </tbody>
               </table>
             </div>
-          </ScrollArea>
+          </div>
         ) : (
           <div className="text-center py-8 text-gray-500">
             No rows returned by the query.
