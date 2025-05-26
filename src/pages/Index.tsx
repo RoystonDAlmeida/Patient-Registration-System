@@ -9,6 +9,7 @@ import { LoadingState } from "@/components/pages/index/LoadingState";
 import { ErrorState } from "@/components/pages/index/ErrorState";
 import { TabNavigation } from "@/components/pages/index/TabNavigation";
 import { TabConfig } from "@/components/pages/index/types";
+import { Footer } from "@/components/pages/index/Footer";
 
 // Lazy load components
 const PatientRegistrationForm = lazy(() => import("@/components/PatientRegistrationForm"));
@@ -206,6 +207,8 @@ const Index = () => {
             </TabsContent>
           </div>
         </Tabs>
+
+        <Footer borderColor="border-blue-100" />
       </div>
     </div>
   );
