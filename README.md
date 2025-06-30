@@ -1,27 +1,37 @@
 # Patient Pocket Ledger
 
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) ![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white) ![PGlite](https://img.shields.io/badge/PGlite-0064a5?style=for-the-badge&logo=postgresql&logoColor=white)
+
 A secure, local-first patient data management system built with React, TypeScript, and PGlite. This application provides a robust solution for managing patient records entirely in the browser, with no server-side dependencies.
 
 ## 📑 Table of Contents
 
-- [🌟 Key Features](#-key-features)
-- [🚀 Getting Started](#-getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [💻 Usage](#-usage)
-  - [Patient Registration](#patient-registration)
-  - [SQL Query Interface](#sql-query-interface)
-  - [Multi-Tab Usage](#multi-tab-usage)
-- [🛠️ Development](#️-development)
-  - [Available Scripts](#available-scripts)
-- [🏗️ Technical Implementation](#️-technical-implementation)
-  - [Data Storage](#data-storage)
-  - [State Management](#state-management)
-- [🎯 Challenges & Solutions](#-challenges--solutions)
-- [🛡️ Security Considerations](#️-security-considerations)
-- [📚 Tech Stack](#-tech-stack)
-- [🤝 Contributing](#-contributing)
-- [📝 License](#-license)
+- [Patient Pocket Ledger](#patient-pocket-ledger)
+  - [📑 Table of Contents](#-table-of-contents)
+  - [🌟 Key Features](#-key-features)
+  - [📸 Demo](#-demo)
+    - [Patient Registration and Real-time Sync](#patient-registration-and-real-time-sync)
+    - [SQL Query Interface](#sql-query-interface)
+  - [🚀 Getting Started](#-getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+  - [💻 Usage](#-usage)
+    - [Patient Registration](#patient-registration)
+    - [SQL Query Interface](#sql-query-interface-1)
+    - [Multi-Tab Usage](#multi-tab-usage)
+  - [🛠️ Development](#️-development)
+    - [Available Scripts](#available-scripts)
+  - [🏗️ Technical Implementation](#️-technical-implementation)
+    - [Data Storage](#data-storage)
+    - [State Management](#state-management)
+  - [🎯 Challenges \& Solutions](#-challenges--solutions)
+    - [Challenge 1: Cross-Tab Synchronization](#challenge-1-cross-tab-synchronization)
+    - [Challenge 2: Data Persistence](#challenge-2-data-persistence)
+    - [Challenge 3: SQL Query Interface](#challenge-3-sql-query-interface)
+  - [🛡️ Security Considerations](#️-security-considerations)
+  - [📚 Tech Stack](#-tech-stack)
+  - [🤝 Contributing](#-contributing)
+  - [📝 License](#-license)
 
 ## 🌟 Key Features
 
@@ -33,6 +43,22 @@ A secure, local-first patient data management system built with React, TypeScrip
 - 🔄 **Multi-Tab Support**: Real-time data synchronization across browser tabs
 - 💾 **Data Persistence**: Patient records persist across page refreshes
 - 🚀 **Zero-Server Architecture**: Everything runs in the browser
+
+## 📸 Demo
+
+Click on the screenshots to see the GIFs in action.
+
+### Patient Registration and Real-time Sync
+
+Shows the process of adding a new patient and how the data instantly synchronizes across two different browser tabs.
+
+[![Patient Registration and Sync Demo](./docs/registration-screenshot.png)](./docs/registration-demo.gif)
+
+### SQL Query Interface
+
+Demonstrates using the SQL interface to run custom queries against the local patient database.
+
+[![SQL Query Demo](./docs/sql-query-screenshot.png)](./docs/sql-query-demo.gif)
 
 ## 🚀 Getting Started
 
